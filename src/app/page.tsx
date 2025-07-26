@@ -1,95 +1,48 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+'use client';
 
-export default function Home() {
+import { useEffect } from 'react';
+import {
+  calculateCompoundFutureValue,
+  calculateCompoundPresentValue,
+  calculateCompoundInterestRate,
+  calculateCompoundPeriods,
+  calculateSimpleFutureValue,
+  calculateSimplePresentValue,
+  calculateSimpleInterest,
+  calculateSimpleInterestRate,
+  calculateSimplePeriods
+} from '@/calculations';
+import { formatCurrency, formatPercentage, limitDecimals } from '@/utils';
+
+export default function Page() {
+  useEffect(() => {
+    console.log('🧮 Teste: Juros Compostos');
+    const principal = 1000;
+    const rate = 0.05;
+    const periods = 12;
+    const futureValue = calculateCompoundFutureValue(principal, rate, periods);
+
+    console.log(`Valor Futuro (F): ${formatCurrency(futureValue)}`);
+    console.log(`Valor Presente (P): ${formatCurrency(calculateCompoundPresentValue(futureValue, rate, periods))}`);
+    console.log(`Taxa de Juros (i): ${formatPercentage(calculateCompoundInterestRate(futureValue, principal, periods))}`);
+    const n = calculateCompoundPeriods(futureValue, principal, rate);
+    console.log(`Número de Períodos (n): ${limitDecimals(n, 2)} períodos`);
+
+    console.log('\n🧮 Teste: Juros Simples');
+    const fvSimple = calculateSimpleFutureValue(principal, rate, periods);
+    console.log(`Valor Futuro (F): ${formatCurrency(fvSimple)}`);
+    console.log(`Valor Presente (P): ${formatCurrency(calculateSimplePresentValue(fvSimple, rate, periods))}`);
+    console.log(`Juros (J): ${formatCurrency(calculateSimpleInterest(principal, rate, periods))}`);
+    console.log(`Taxa de Juros (i): ${formatPercentage(calculateSimpleInterestRate(fvSimple, principal, periods))}`);
+    const nSimple = calculateSimplePeriods(fvSimple, principal, rate);
+    console.log(`Número de Períodos (n): ${limitDecimals(nSimple, 2)} períodos`);
+
+  }, []);
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <main style={{ padding: '1rem', fontFamily: 'Arial, sans-serif' }}>
+      <h1>Teste de Juros Compostos e Simples</h1>
+      <p>Confira os resultados no console do navegador (F12).</p>
+    </main>
   );
 }
